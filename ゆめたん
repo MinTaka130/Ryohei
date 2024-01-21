@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英単語めくりゲーム</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        #card-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            width: 200px;
+            height: 300px;
+            margin: 10px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backface-visibility: hidden;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div id="card-container">
+        <div class="card" onclick="flipCard()">
+            <div class="card-inner">
+                <div class="card-front">
+                    <p>English Word 1</p>
+                </div>
+                <div class="card-back">
+                    <p>日本語訳: Japanese Translation 1</p>
+                    <p>英語説明: English Description 1</p>
+                </div>
+            </div>
+        </div>
+        <!-- 他のカードも同様に追加 -->
+    </div>
+
+    <!-- 新しい単語を追加するためのフォーム -->
+    <div>
+        <label for="newWord">新しい単語:</label>
+        <input type="text" id="newWord" placeholder="英単語">
+        <label for="newTranslation">日本語訳:</label>
+        <input type="text" id="newTranslation" placeholder="日本語訳">
+        <label for="newDescription">英語説明:</label>
+        <input type="text" id="newDescription" placeholder="英語説明">
+        <button onclick="addNewWord()">単語を追加</button>
+    </div>
+
+    <script>
+        var words = [
+            { word: "Apple", translation: "りんご", description: "A fruit that is typically red or green." },
+            { word: "Car", translation: "車", description: "A four-wheeled motor vehicle used for transportation." },
+            // 他の単語も同様に追加
+        ];
+
+        function flipCard() {
+            var card = event.currentTarget;
+            card.querySelector('.card-inner').style.transform = 'rotateY(180deg)';
+        }
+
+        function displayRandomWord() {
+            var randomIndex = Math.floor(Math.random() * words.length);
+            var randomWord = words[randomIndex];
+            document.querySelector('.card-front p').innerText = randomWord.word;
+            document.querySelector('.card-back p:nth-child(1)').innerText = "日本語訳: " + randomWord.translation;
+            document.querySelector('.card-back p:nth-child(2)').innerText = "英語説明: " + randomWord.description;
+        }
+
+        function addNewWord() {
+            var newWord = document.getElementById('newWord').value;
+            var newTranslation = document.getElementById('newTranslation').value;
+            var newDescription = document.getElementById('newDescription').value;
+
+            if (newWord && newTranslation && newDescription) {
+                words.push({ word: newWord, translation: newTranslation, description: newDescription });
+                displayRandomWord();
+                document.getElementById('newWord').value = '';
+                document.getElementById('newTranslation').value = '';
+                document.getElementById('newDescription').value = '';
+            } else {
+                alert("全てのフィールドに入力してください。");
+            }
+        }
+
+        displayRandomWord();
+    </script>
+</body>
+</html>
